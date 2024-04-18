@@ -1,4 +1,4 @@
 package com.ethan.ai115.pixelcollector.service;
 
-public class GameService {
+public interface GameService {
 }
