@@ -1,10 +1,11 @@
 package com.ethan.ai115.pixelcollector.service;
 
 
+import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
 
 public interface UserService {
-    User registerNewUser(User user);
+    User registerNewUser(UserDto userDto);
     User findUserByUsername(String username);
     User findUserByEmail(String email);
     User findUserByWalletAddress(String walletAddress);

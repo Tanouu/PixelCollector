@@ -1,10 +1,12 @@
 package com.ethan.ai115.pixelcollector.controller;
 
 import com.ethan.ai115.pixelcollector.dto.LoginDto;
+import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,16 +14,19 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerNewUser(@RequestBody User newUser) {
-        User user = userService.registerNewUser(newUser);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> registerNewUser(@RequestBody UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userService.registerNewUser(userDto);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")

@@ -1,5 +1,6 @@
 package com.ethan.ai115.pixelcollector.service.impl;
 
+import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
 import com.ethan.ai115.pixelcollector.repository.UserRepository;
 import com.ethan.ai115.pixelcollector.service.UserService;
@@ -18,8 +19,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User registerNewUser(User user) {
-        return null;
+    public User registerNewUser(UserDto userDto) {
+        User newUser = new User();
+        newUser.setUsername(userDto.getUsername());
+        newUser.setEmail(userDto.getEmail());
+        newUser.setPassword(userDto.getPassword());
+        newUser.setBirthDate(userDto.getBirthDate());
+        newUser.setWalletAddress(userDto.getWalletAddress());
+        newUser.setTwoFactorAuthEnabled(userDto.isTwoFactorAuthEnabled());
+        newUser.setPhoto(userDto.getPhoto());
+        return userRepository.save(newUser);
     }
 
     @Override
@@ -164,6 +173,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long userId) {
-        return null;
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
 }

@@ -1,19 +1,18 @@
 package com.ethan.ai115.pixelcollector.dto;
 
+import java.time.LocalDate;
+
 public class UserDto {
 
     private String username;
     private String password;
     private String email;
-    private String birthDate;
+    private LocalDate birthDate;
     private String walletAddress;
     private boolean twoFactorAuthEnabled;
     private String photo;
 
-    public UserDto() {
-    }
-
-    public UserDto(String username, String password, String email, String birthDate, String walletAddress, boolean twoFactorAuthEnabled, String photo) {
+    public UserDto(String username, String password, String email, LocalDate birthDate, String walletAddress, boolean twoFactorAuthEnabled, String photo) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -47,11 +46,11 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
