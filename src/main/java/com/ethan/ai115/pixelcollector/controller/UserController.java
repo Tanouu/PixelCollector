@@ -6,6 +6,7 @@ import com.ethan.ai115.pixelcollector.model.User;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody LoginDto loginData) {
-        User user = userService.loginUser(loginData.getUsername(), loginData.getPassword());
+        User user = userService.findUserByUsername(loginData.getUsername());
+        System.out.println("Username: " + loginData.getUsername()); // log the username
+        System.out.println("Provided password: " + loginData.getPassword()); // log the provided password
+        if (user == null) {
+            System.out.println("User not found"); // log if the user is not found
+        }
         return ResponseEntity.ok(user);
     }
 
