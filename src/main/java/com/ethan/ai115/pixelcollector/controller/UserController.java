@@ -3,10 +3,14 @@ package com.ethan.ai115.pixelcollector.controller;
 import com.ethan.ai115.pixelcollector.dto.LoginDto;
 import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
+import com.ethan.ai115.pixelcollector.security.JwtUtil;
+import com.ethan.ai115.pixelcollector.service.impl.UserDetailsServiceImpl;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +20,15 @@ public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -31,14 +39,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody LoginDto loginData) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginDto loginData) {
         User user = userService.findUserByUsername(loginData.getUsername());
-        System.out.println("Username: " + loginData.getUsername()); // log the username
-        System.out.println("Provided password: " + loginData.getPassword()); // log the provided password
         if (user == null) {
-            System.out.println("User not found"); // log if the user is not found
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        } else if (!passwordEncoder.matches(loginData.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username/password");
         }
-        return ResponseEntity.ok(user);
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(jwt);
     }
 
     @GetMapping("/{userId}")

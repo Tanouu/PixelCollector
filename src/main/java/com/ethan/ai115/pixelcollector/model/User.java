@@ -1,5 +1,6 @@
 package com.ethan.ai115.pixelcollector.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class User {
     @Column(name = "username" , nullable = false , unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(name = "password" , nullable = false)
     private String password;
 
@@ -95,5 +97,19 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", birthDate=" + birthDate +
+                ", walletAddress='" + walletAddress + '\'' +
+                ", twoFactorAuthEnabled=" + twoFactorAuthEnabled +
+                ", photo='" + photo + '\'' +
+                '}';
     }
 }
