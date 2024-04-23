@@ -3,13 +3,14 @@ package com.ethan.ai115.pixelcollector.controller;
 import com.ethan.ai115.pixelcollector.dto.LoginDto;
 import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
-import com.ethan.ai115.pixelcollector.security.JwtUtil;
+import com.ethan.ai115.pixelcollector.security.JwtGenerator;
 import com.ethan.ai115.pixelcollector.service.impl.UserDetailsServiceImpl;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,14 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtUtil jwtUtil;
+    private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService, JwtGenerator jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
+        this.jwtGenerator = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -48,7 +49,9 @@ public class UserController {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        final String jwt = jwtGenerator.generateToken(authentication);
         return ResponseEntity.ok(jwt);
     }
 
