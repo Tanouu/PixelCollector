@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -52,7 +55,12 @@ public class UserController {
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         final String jwt = jwtGenerator.generateToken(authentication);
-        return ResponseEntity.ok(jwt);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("jwt", jwt);
+        response.put("user", user);
+        return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("/{userId}")
