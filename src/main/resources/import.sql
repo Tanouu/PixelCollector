@@ -1,11 +1,11 @@
+INSERT INTO `roles` (`id`, `name`) VALUES (1, 'USER');
+INSERT INTO `roles` (`id`, `name`) VALUES (2, 'ADMIN');
+
 INSERT INTO `users` (`id`, `birth_date`, `email`, `password`, `photo`, `2fa_enabled`, `username`, `wallet_address`) VALUES (1, '2002-12-17', 'ethanpacheco.t@gmail.com', '$2a$10$P9xNS7GJSohjHGWe3uOw.OtEiBiZvdBPQ8NZDchoCTLUAwS.u9mka', 'oui', b'0', 'Tanouu', '0fgfdfgdghggjkghkhkhhb');
 INSERT INTO `users` (`id`, `birth_date`, `email`, `password`, `photo`, `2fa_enabled`, `username`, `wallet_address`) VALUES (2, '2002-12-17', 'p.tanou@outlook.fr', '$2a$10$VSyg4gtb4xKYfuhx0swZIOlIRf4FOVRAsGFH5Pe11m8uv7za1vHXK', 'oui', b'1', 'Tanou', '0fgfdfgdgf');
 
 INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES (2, 1);
 INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES (1, 1);
-
-INSERT INTO `roles` (`id`, `name`) VALUES (1, 'USER');
-INSERT INTO `roles` (`id`, `name`) VALUES (2, 'ADMIN');
 
 INSERT INTO `nft` (`id`, `photo`, `rarity`, `owner_id`) VALUES (1, 'Rare.png', 'rare', 2);
 INSERT INTO `nft` (`id`, `photo`, `rarity`, `owner_id`) VALUES (2, 'PeuCommun.png', 'peu commun', 1);
