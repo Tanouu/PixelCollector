@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `nft` (
   CONSTRAINT `FKahuvv187jbcewhkx17kkvj8u0` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table pixelcollector.nft : ~7 rows (environ)
+-- Listage des données de la table pixelcollector.nft : ~6 rows (environ)
 INSERT INTO `nft` (`id`, `photo`, `rarity`, `owner_id`) VALUES
 	(1, 'Rare.png', 'rare', 2),
 	(2, 'PeuCommun.png', 'peu commun', 1),
@@ -75,6 +75,18 @@ INSERT INTO `nft` (`id`, `photo`, `rarity`, `owner_id`) VALUES
 	(5, 'Rare2.png', 'rare', 2),
 	(6, 'Commun2.png', 'commun', 2),
 	(7, 'Epique.png', 'epique', 2);
+
+-- Listage de la structure de table pixelcollector. roles
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table pixelcollector.roles : ~2 rows (environ)
+INSERT INTO `roles` (`id`, `name`) VALUES
+	(1, 'USER'),
+	(2, 'ADMIN');
 
 -- Listage de la structure de table pixelcollector. sell
 CREATE TABLE IF NOT EXISTS `sell` (
@@ -91,23 +103,24 @@ CREATE TABLE IF NOT EXISTS `sell` (
   CONSTRAINT `FKnp9t95isqutsw8cxwsc3hod5i` FOREIGN KEY (`nft_id`) REFERENCES `nft` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Listage des données de la table pixelcollector.sell : ~7 rows (environ)
-INSERT INTO `sell` (`id`, `date_vente`, `prix`, `utilisateur_id`, `nft_id`, `date_sale`) VALUES
-	(1, '2024-04-22 14:24:52.000000', 1000, 2, 1, NULL),
-	(2, '2024-04-22 15:05:00.000000', 10, 1, 2, '2024-04-22 15:05:10.000000'),
-	(3, '2024-04-22 16:39:30.000000', 500, 2, 3, NULL),
-	(4, '2024-04-22 16:42:52.000000', 900, 2, 4, NULL),
-	(5, '2024-04-22 16:43:07.000000', 800, 2, 5, NULL),
-	(6, '2024-04-22 16:43:20.000000', 700, 2, 6, NULL),
-	(7, '2024-04-22 16:43:34.000000', 600, 2, 7, NULL);
+-- Listage des données de la table pixelcollector.sell : ~6 rows (environ)
+INSERT INTO `sell` (`id`, `date_vente`, `prix`, `nft_id`, `date_sale`) VALUES
+	(1, '2024-04-22 14:24:52.000000', 1000, 1, NULL),
+	(2, '2024-04-22 15:05:00.000000', 10, 2, '2024-04-22 15:05:10.000000'),
+	(3, '2024-04-22 16:39:30.000000', 500, 3, NULL),
+	(4, '2024-04-22 16:42:52.000000', 900, 4, NULL),
+	(5, '2024-04-22 16:43:07.000000', 800, 5, NULL),
+	(6, '2024-04-22 16:43:20.000000', 700, 6, NULL),
+	(7, '2024-04-22 16:43:34.000000', 600, 7, NULL);
 
 -- Listage de la structure de table pixelcollector. sell_seq
 CREATE TABLE IF NOT EXISTS `sell_seq` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Listage des données de la table pixelcollector.sell_seq : ~1 rows (environ)
+-- Listage des données de la table pixelcollector.sell_seq : ~0 rows (environ)
 INSERT INTO `sell_seq` (`next_val`) VALUES
+	(1),
 	(1);
 
 -- Listage de la structure de table pixelcollector. support_ticket
@@ -136,12 +149,26 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_r43af9ap4edm43mmtq01oddj6` (`username`),
   UNIQUE KEY `UK_l8ei97je165nvih6t685vwx5d` (`wallet_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
--- Listage des données de la table pixelcollector.users : ~2 rows (environ)
+-- Listage des données de la table pixelcollector.users : ~11 rows (environ)
 INSERT INTO `users` (`id`, `birth_date`, `email`, `password`, `photo`, `2fa_enabled`, `username`, `wallet_address`) VALUES
 	(1, '2002-12-17', 'ethanpacheco.t@gmail.com', '$2a$10$P9xNS7GJSohjHGWe3uOw.OtEiBiZvdBPQ8NZDchoCTLUAwS.u9mka', 'oui', b'0', 'Tanouu', '0fgfdfgdghggjkghkhkhhb'),
 	(2, '2002-12-17', 'p.tanou@outlook.fr', '$2a$10$VSyg4gtb4xKYfuhx0swZIOlIRf4FOVRAsGFH5Pe11m8uv7za1vHXK', 'oui', b'1', 'Tanou', '0fgfdfgdgf');
+
+-- Listage de la structure de table pixelcollector. user_roles
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `user_id` bigint(20) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  KEY `FKh8ciramu9cc9q3qcqiv4ue8a6` (`role_id`),
+  KEY `FKhfh9dx7w3ubf1co1vdev94g3f` (`user_id`),
+  CONSTRAINT `FKh8ciramu9cc9q3qcqiv4ue8a6` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
+  CONSTRAINT `FKhfh9dx7w3ubf1co1vdev94g3f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Listage des données de la table pixelcollector.user_roles : ~2 rows (environ)
+INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
+	(2, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

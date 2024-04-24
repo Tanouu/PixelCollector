@@ -11,14 +11,15 @@ public class Sell {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     @ManyToOne
     @JoinColumn(name = "nft_id", referencedColumnName = "id")
     private NFT nft;
 
     private Double prix;
     private LocalDateTime dateSale;
+    private LocalDateTime dateBuy;
 
+    //pour le vendeur de la table users
     public Long getId() {
         return id;
     }
@@ -52,13 +53,24 @@ public class Sell {
         this.dateSale = dateSale;
     }
 
+    public LocalDateTime getDateBuy() {
+        return dateBuy;
+    }
+
+    public void setDateBuy(LocalDateTime dateBuy) {
+        this.dateBuy = dateBuy;
+    }
+
+
+
     @Override
     public String toString() {
         return "Sell{" +
                 "id=" + id +
                 ", nft=" + nft +
-                ", price=" + prix +
+                ", prix=" + prix +
                 ", dateSale=" + dateSale +
+                ", dateBuy=" + dateBuy +
                 '}';
     }
 }
