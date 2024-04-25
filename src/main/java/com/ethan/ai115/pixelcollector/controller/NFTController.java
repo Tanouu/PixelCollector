@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/nft")
 public class NFTController {
@@ -29,4 +31,14 @@ public class NFTController {
         System.out.println(nft); // Ajoutez ce log
         return ResponseEntity.ok(nft);
     }
+
+           @GetMapping("/user/{userId}")
+        public ResponseEntity<List<NFT>> getNFTsByUser(@PathVariable Long userId) {
+            List<NFT> nfts = nftService.getNFTsByUserId(userId);
+            if (nfts.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(nfts);
+}
+
 }
