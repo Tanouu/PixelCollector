@@ -16,13 +16,11 @@ public class SellController {
     @Autowired
     private SellService SellService;
 
-    @PostMapping
-    public ResponseEntity<Sell> effectuerVente(@RequestBody SellDto venteDTO) {
-        // Convertissez venteDTO en entités et appelez venteService.vendreNFT(...)
-        // Retournez la réponse
-        return null;
+    @PostMapping("/register")
+    public ResponseEntity<Sell> registerSellNFT(@RequestBody SellDto sellDto) {
+        Sell newSell = SellService.registerSellNFT(sellDto);
+        return ResponseEntity.ok(newSell);
     }
-
     @GetMapping("/all")
     public ResponseEntity<List<Sell>> listerToutesLesVentes() {
         List<Sell> ventes = SellService.getSales();
