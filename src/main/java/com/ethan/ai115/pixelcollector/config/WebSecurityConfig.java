@@ -42,7 +42,9 @@ public class WebSecurityConfig {
                     authorize.requestMatchers("/api/users/{userId}").hasAuthority("USER");
                     authorize.requestMatchers("/api/nft/{nftId}").hasAuthority("USER");
                     authorize.requestMatchers("/api/nft/user/{userId}").hasAuthority("USER");
-                    authorize.requestMatchers("/api/sell/register").permitAll();
+                    authorize.requestMatchers("/api/sell/register").hasAuthority("USER");
+                    authorize.requestMatchers("/api/sell/buy").hasAuthority("USER");
+                    authorize.requestMatchers("/api/sell/{saleId}").hasAuthority("USER");
 //                    authorize.requestMatchers("/api/admin/**").hasAuthority("ADMIN");
                     authorize.anyRequest().authenticated();
                 })

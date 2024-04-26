@@ -16,4 +16,5 @@ public interface SellRepository extends JpaRepository<Sell, Long> {
 
     boolean existsByNft(NFT nft);
 
+
 }

@@ -1,5 +1,6 @@
 package com.ethan.ai115.pixelcollector.controller;
 
+import com.ethan.ai115.pixelcollector.dto.BuyNFTRequest;
 import com.ethan.ai115.pixelcollector.dto.SellDto;
 import com.ethan.ai115.pixelcollector.model.Sell;
 import com.ethan.ai115.pixelcollector.service.SellService;
@@ -26,4 +27,17 @@ public class SellController {
         List<Sell> ventes = SellService.getSales();
         return ResponseEntity.ok(ventes);
     }
+
+    @PutMapping("/buy")
+    public ResponseEntity<?> buyNFT(@RequestBody BuyNFTRequest request) {
+        SellService.buyNFT(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{saleId}")
+    public ResponseEntity<?> deleteSale(@PathVariable Long saleId) {
+        SellService.deleteSell(saleId);
+        return ResponseEntity.ok().build();
+    }
+
 }
