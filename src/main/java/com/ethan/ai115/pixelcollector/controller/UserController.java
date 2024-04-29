@@ -4,6 +4,7 @@ import com.ethan.ai115.pixelcollector.dto.LoginDto;
 import com.ethan.ai115.pixelcollector.dto.UserDto;
 import com.ethan.ai115.pixelcollector.model.User;
 import com.ethan.ai115.pixelcollector.security.JwtGenerator;
+import com.ethan.ai115.pixelcollector.service.impl.TwoFactorAuthenticationServiceImpl;
 import com.ethan.ai115.pixelcollector.service.impl.UserDetailsServiceImpl;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +29,14 @@ public class UserController {
     private final JwtGenerator jwtGenerator;
 
     @Autowired
+    private TwoFactorAuthenticationServiceImpl twoFactorAuthService;
+
+    @Autowired
     public UserController(UserService userService, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService, JwtGenerator jwtUtil) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.jwtGenerator = jwtUtil;
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody UserDto userDto) {
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userService.registerNewUser(userDto);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
@@ -51,6 +48,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username/password");
         }
 
+        String totp = loginData.getTotp(); // Get TOTP from loginData
+        totp = totp.replace(" ", ""); // Remove spaces from TOTP
+
+        if (user.isTwoFactorAuthEnabled()) {
+            System.out.println("User's secret key: " + user.getSecretKey());
+            System.out.println("Received TOTP: " + totp);
+            if (totp == null || !twoFactorAuthService.validateCode(user.getSecretKey(), totp)) {
+                System.out.println("Invalid TOTP.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid TOTP.");
+            }
+            System.out.println("TOTP validated successfully.");
+        }
+
         final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -60,7 +70,6 @@ public class UserController {
         response.put("jwt", jwt);
         response.put("user", user);
         return ResponseEntity.ok(response);
-
     }
 
     @GetMapping("/{userId}")

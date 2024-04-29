@@ -18,7 +18,6 @@ public class User {
     @Column(name = "username" , nullable = false , unique = true)
     private String username;
 
-    @JsonIgnore
     @Column(name = "password" , nullable = false)
     private String password;
 
@@ -33,6 +32,9 @@ public class User {
 
     @Column(name = "2faEnabled" , nullable = false)
     private boolean twoFactorAuthEnabled;
+
+    @Column(name = "secretKey" , nullable = true)
+    private String secretKey;
 
     @Column(name= "photo" , nullable = true)
     private String photo;
@@ -114,6 +116,14 @@ public class User {
         this.roles = roles;
     }
 
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -124,7 +134,9 @@ public class User {
                 ", birthDate=" + birthDate +
                 ", walletAddress='" + walletAddress + '\'' +
                 ", twoFactorAuthEnabled=" + twoFactorAuthEnabled +
+                ", secretKey='" + secretKey + '\'' +
                 ", photo='" + photo + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

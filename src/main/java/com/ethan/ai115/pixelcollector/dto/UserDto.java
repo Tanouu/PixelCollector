@@ -11,8 +11,10 @@ public class UserDto {
     private String walletAddress;
     private boolean twoFactorAuthEnabled;
     private String photo;
+    private String secretKey;
+    private String qrCodeImage;
 
-    public UserDto(String username, String password, String email, LocalDate birthDate, String walletAddress, boolean twoFactorAuthEnabled, String photo) {
+    public UserDto(String username, String password, String email, LocalDate birthDate, String walletAddress, boolean twoFactorAuthEnabled, String photo, String secretKey, String qrCodeImage) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -20,6 +22,8 @@ public class UserDto {
         this.walletAddress = walletAddress;
         this.twoFactorAuthEnabled = twoFactorAuthEnabled;
         this.photo = photo;
+        this.secretKey = secretKey;
+        this.qrCodeImage = qrCodeImage;
     }
 
     public String getUsername() {
@@ -78,16 +82,35 @@ public class UserDto {
         this.photo = photo;
     }
 
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public String getQrCodeImage() {
+        return qrCodeImage;
+    }
+
+    public void setQrCodeImage(String qrCodeImage) {
+        this.qrCodeImage = qrCodeImage;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", birthDate='" + birthDate + '\'' +
+                ", birthDate=" + birthDate +
                 ", walletAddress='" + walletAddress + '\'' +
                 ", twoFactorAuthEnabled=" + twoFactorAuthEnabled +
                 ", photo='" + photo + '\'' +
+                ", secretKey='" + secretKey + '\'' +
+                ", qrCodeImage='" + qrCodeImage + '\'' +
                 '}';
     }
 }

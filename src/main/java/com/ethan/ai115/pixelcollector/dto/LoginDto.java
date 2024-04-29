@@ -4,13 +4,15 @@ public class LoginDto {
 
         private String username;
         private String password;
+        private String totp;
 
         public LoginDto() {
         }
 
-        public LoginDto(String username, String password) {
+        public LoginDto(String username, String password, String totp) {
             this.username = username;
             this.password = password;
+            this.totp = totp;
         }
 
         public String getUsername() {
@@ -29,11 +31,20 @@ public class LoginDto {
             this.password = password;
         }
 
-        @Override
-        public String toString() {
-            return "LoginDto{" +
-                    "username='" + username + '\'' +
-                    ", password='" + password + '\'' +
-                    '}';
-        }
+    public String getTotp() {
+        return totp;
+    }
+
+    public void setTotp(String totp) {
+        this.totp = totp;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDto{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", totp='" + totp + '\'' +
+                '}';
+    }
 }
