@@ -37,4 +37,6 @@ public interface UserService {
     User loginUser(String username, String password);
 
     User findUserById(Long userId);
+
+    void updateWalletAddress(Long userId, String walletAddress);
 }

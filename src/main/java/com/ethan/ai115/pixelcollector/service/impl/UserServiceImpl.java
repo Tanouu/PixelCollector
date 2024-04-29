@@ -5,8 +5,10 @@ import com.ethan.ai115.pixelcollector.model.User;
 import com.ethan.ai115.pixelcollector.repository.UserRepository;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -178,4 +180,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
+
+    @Override
+    public void updateWalletAddress(Long userId, String newWalletAddress) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+        user.setWalletAddress(newWalletAddress);
+        userRepository.save(user);
+    }
+
+
 }

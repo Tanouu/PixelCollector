@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                     authorize.requestMatchers("/api/sell/register").hasAuthority("USER");
                     authorize.requestMatchers("/api/sell/buy").hasAuthority("USER");
                     authorize.requestMatchers("/api/sell/{saleId}").hasAuthority("USER");
+                    authorize.requestMatchers("/api/users/{userId}/wallet").permitAll();
 //                    authorize.requestMatchers("/api/admin/**").hasAuthority("ADMIN");
                     authorize.anyRequest().authenticated();
                 })

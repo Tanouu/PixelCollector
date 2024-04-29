@@ -69,4 +69,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/{userId}/wallet")
+    public ResponseEntity<?> updateWalletAddress(@PathVariable Long userId, @RequestBody String walletAddress) {
+        userService.updateWalletAddress(userId, walletAddress);
+        return ResponseEntity.ok().build();
+    }
+
 }
