@@ -28,7 +28,6 @@ public class AuthController {
     public ResponseEntity<String> enableTwoFactorAuth(@RequestBody User user) throws QrGenerationException {
         String secretKey = twoFactorAuthService.generateSecretKey();
         user.setSecretKey(secretKey);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         String qrCodeImage = twoFactorAuthService.getUriForImage(secretKey, user.getUsername());

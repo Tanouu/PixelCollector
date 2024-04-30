@@ -39,6 +39,13 @@ public class UserController {
         this.jwtGenerator = jwtUtil;
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> registerNewUser(@RequestBody UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userService.registerNewUser(userDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginData) {
         User user = userService.findUserByUsername(loginData.getUsername());
