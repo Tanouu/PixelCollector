@@ -11,11 +11,13 @@ import com.ethan.ai115.pixelcollector.service.BidService;
 import com.ethan.ai115.pixelcollector.service.SellService;
 import com.ethan.ai115.pixelcollector.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 
 @RestController
@@ -107,6 +109,12 @@ public class AuctionController {
     public ResponseEntity<LocalDateTime> getAuctionEndDate(@PathVariable Long auctionId) {
         Auction auction = auctionService.getAuction(auctionId);
         return ResponseEntity.ok(auction.getEndDate());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Auction>> getAllAuctions() {
+        List<Auction> auctions = auctionService.getAllAuctions();
+        return ResponseEntity.ok(auctions);
     }
 
 }

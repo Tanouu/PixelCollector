@@ -12,6 +12,7 @@ import com.ethan.ai115.pixelcollector.repository.UserRepository;
 import com.ethan.ai115.pixelcollector.service.AuctionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
@@ -73,6 +74,11 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public List<Auction> getAllAuctions() {
+        return auctionRepository.findAll();
+    }
+
+    @Override
     public void deleteAuction(Long auctionId) {
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -93,17 +99,18 @@ public class AuctionServiceImpl implements AuctionService {
         return auctionRepository.findByNftId(nftId).isPresent();
     }
 
-    @Override
-    @Transactional
-    public void endAuction(Long auctionId) {
-        Auction auction = auctionRepository.findById(auctionId)
-                .orElseThrow(() -> new RuntimeException("Auction not found"));
+   @Override
+@Transactional
+public void endAuction(Long auctionId) {
+    Auction auction = auctionRepository.findById(auctionId)
+            .orElseThrow(() -> new RuntimeException("Auction not found"));
 
-        if (auction.getEndDate().isAfter(LocalDateTime.now())) {
-            throw new RuntimeException("The auction is not yet over.");
-        }
+    if (auction.getEndDate().isAfter(LocalDateTime.now())) {
+        throw new RuntimeException("The auction is not yet over.");
+    }
 
-        Bid highestBid = auction.getHighestBid();
+    Bid highestBid = auction.getHighestBid();
+    if (highestBid != null) {
         User highestBidder = highestBid.getUser();
 
         // Transfer ownership of the NFT to the highest bidder
@@ -111,17 +118,30 @@ public class AuctionServiceImpl implements AuctionService {
         nft.setOwner(highestBidder);
         nftRepository.save(nft);
 
-        // Set the highestBid to null
+        // Set the highestBid to null in the auction before deleting the bid
         auction.setHighestBid(null);
         auctionRepository.save(auction);
 
-        // Delete the highest bid
+        // Now it's safe to delete the highest bid
         bidRepository.delete(highestBid);
+    }
 
-        // Delete all bids associated with the auction
-        bidRepository.deleteAll(auction.getBids());
+    // Delete all bids associated with the auction
+    bidRepository.deleteAll(auction.getBids());
 
-        // Delete the auction
-        auctionRepository.delete(auction);
+    // Delete the auction
+    auctionRepository.delete(auction);
+}
+
+
+    @Scheduled(fixedRate = 60000) // Vérifie toutes les minutes
+    public void checkAuctions() {
+        List<Auction> auctions = auctionRepository.findAll();
+        for (Auction auction : auctions) {
+            if (auction.getEndDate().isBefore(LocalDateTime.now())) {
+                endAuction(auction.getId());
+            }
+        }
     }
 }
+

@@ -12,6 +12,7 @@ public interface AuctionService {
     Bid placeBid(Bid bid);
     List<Bid> getBidsForAuction(Long auctionId);
     Auction getAuction(Long id);
+    List<Auction> getAllAuctions();
 
     void deleteAuction(Long auctionId);
     boolean isNftOnAuction(Long nftId);
