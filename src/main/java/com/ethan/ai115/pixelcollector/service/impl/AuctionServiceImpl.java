@@ -51,16 +51,22 @@ public class AuctionServiceImpl implements AuctionService {
         return auctionRepository.save(auction);
     }
 
-    @Override
-    public Bid placeBid(Bid bid) {
-        Auction auction = auctionRepository.findById(bid.getAuction().getId()).orElseThrow(() -> new RuntimeException("Auction not found"));
-        if (auction.getCurrentPrice() < bid.getAmount()) {
-            auction.setCurrentPrice(bid.getAmount());
-            auction.setHighestBid(bid);
-            auctionRepository.save(auction);
-        }
-        return bidRepository.save(bid);
+@Override
+public Bid placeBid(Bid bid) {
+    Auction auction = auctionRepository.findById(bid.getAuction().getId()).orElseThrow(() -> new RuntimeException("Auction not found"));
+
+    // Vérifie si l'utilisateur qui enchérit est le propriétaire de l'enchère
+    if (auction.getNft().getOwner().getId().equals(bid.getUser().getId())) {
+        throw new RuntimeException("The owner cannot bid on their own NFT.");
     }
+
+    if (auction.getCurrentPrice() < bid.getAmount()) {
+        auction.setCurrentPrice(bid.getAmount());
+        auction.setHighestBid(bid);
+        auctionRepository.save(auction);
+    }
+    return bidRepository.save(bid);
+}
 
     @Override
     public List<Bid> getBidsForAuction(Long auctionId) {
