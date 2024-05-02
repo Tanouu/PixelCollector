@@ -17,4 +17,6 @@ public interface SellService {
 
     void deleteSell(Long saleId);
 
+    boolean isNftOnSale(Long nftId);
+
 }

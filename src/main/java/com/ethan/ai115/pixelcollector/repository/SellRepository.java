@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SellRepository extends JpaRepository<Sell, Long> {
@@ -17,4 +18,5 @@ public interface SellRepository extends JpaRepository<Sell, Long> {
     boolean existsByNft(NFT nft);
 
 
+    Optional<Sell> findByNftId(Long nftId);
 }

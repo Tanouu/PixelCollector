@@ -69,5 +69,10 @@ public Sell registerSellNFT(SellDto sellDto) {
         }
         sellRepository.deleteById(saleId);
     }
+
+    @Override
+public boolean isNftOnSale(Long nftId) {
+    return sellRepository.findByNftId(nftId).isPresent();
+}
 }
 
